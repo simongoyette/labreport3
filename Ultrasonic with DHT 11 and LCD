@@ -1,0 +1,49 @@
+/*
+The goal of the program is to print out the data of an ultrasonic sensor and a DHT 11 sensor on an LCD
+The main theme of the program is the ultrasonic sensor, the DHT 11 and the LCD
+*/
+#include <LiquidCrystal.h>    //Includes the LCD library
+#include <DHT.h>    //Includes the DHT 11 library
+
+#define DHTPIN 8    //Defines the DHT pin as pin 8
+#define DHTTYPE DHT11   //Defines the type of sensor as a DHT 11
+
+#define trigPin 10    //Defines trigPin as pin 10
+#define echoPin 13    //Defines echoPin as pin 13
+float duration, distance;   //Lets the variables duration and distance have decimals
+
+DHT dht(DHTPIN,DHTTYPE);    //Initializes the DHT 11
+
+const int rs = 12, en = 11, d4 = 5, d5 = 4, d6 = 3, d7 = 2;   //Setting up each variable for each pin
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+void setup()
+{
+Serial.begin(9600);   //Sets the serial communication at 9600
+pinMode(trigPin, OUTPUT);   //Sets the trigPin as an output
+pinMode(echoPin, INPUT);    //Sets the echoPin as an input
+lcd.begin(16,2);    //Setting up he LCD's number of collumns and rows
+dht.begin();    //Initializes communication with the DHT 11
+}
+
+void loop() {
+float temperature = dht.readTemperature();    //Reads the temperature data from the sensor
+
+digitalWrite(trigPin, LOW);   //Sets the trigPin as low for 2 microseconds
+delayMicroseconds(2);    //2 microsecond delay
+digitalWrite(trigPin, HIGH);    //Sets the trigPin as high for 10 microseconds
+delayMicroseconds(10);    //10 microsecond delay
+digitalWrite(trigPin, LOW);   //Sets the trigPin as low again
+
+duration = pulseIn(echoPin, HIGH);    //Measures the amount of time the pulse stays high
+distance = (duration / 2) * 0.0343;   //Calculate the distance using the speed of sound
+
+lcd.setCursor(0,1);   //Sets the cursor to collumn 0, line 1
+lcd.print("Temperature=");    //Prints out "Temperature=" on the LCD
+lcd.print(temperature, 1);    //Prints out the temperature data from the DHT 11 with 1 decimal number
+delay(500);   //Delay for stability
+
+lcd.setCursor(0,0);   //Sets the cursor to collumn 0, line 0
+lcd.print("Distance=");   //Prints out "Distance=" on the LCD
+lcd.print(distance);    //Prints out the distance of the object on the LCD
+}
