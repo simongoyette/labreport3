@@ -1,0 +1,33 @@
+#include <LiquidCrystal.h>    //Including the library used
+const int rs = 12, en = 13, d4 = 5, d5 = 4, d6 = 3, d7 = 2;   //Setting up each variable for each pin
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+void setup() 
+{
+  Serial.begin(9600);   //The serial communication begins at 9600
+  lcd.begin(16, 2);   //Setting up the LCD's number of collumns and rows
+   lcd.print("Digital ohmmeter");    //Print out a message on the ohmmeter
+
+  byte ohmSymbol[8] = {   //Creating the ohm symbol
+  B00100,
+  B01010,
+  B01010,
+  B10001,
+  B10001,
+  B10001,
+  B01110,
+  B00000
+};
+lcd.createChar(0, ohmSymbol);   //Defines the ohm character
+}
+void loop() {
+int BitValue = analogRead(A0);    //Sets the variable BitValue as the pin A0
+float Voltage = BitValue * (5.0 / 1023.0);    //Configures a float variable called Voltage as BitValue * 5 / 1023
+float resistance = (5.0 - Voltage) / Voltage * 10.0;    //uses ohm's law to calculate the resistance
+lcd.clear() ;   //Clears the LCD
+lcd.setCursor(0,0);   //Sets the cursor to collumn 0, line 0 
+lcd.print("Resistance=");   //Prints out "resistance ="
+lcd.setCursor(0,1);   //Sets the cursor to collumn 0, line 1
+lcd.print(resistance);    //Prints out the resistance value
+lcd.write((uint8_t)0);    //Prints out the ohm symbol
+delay(500);   //Delay for stability
+}
