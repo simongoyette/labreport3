@@ -1,0 +1,24 @@
+/* 
+The goal of this program is to create a voltmeter that reads the voltage of a potentiometer, it prints out on an LCD
+The main theme of the program is the LCD
+*/
+
+#include <LiquidCrystal.h>    //Including the library used
+const int rs = 12, en = 13, d4 = 5, d5 = 4, d6 = 3, d7 = 2;   //Setting up each variable for each pin
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+void setup() 
+{
+  Serial.begin(9600);   //The serial communication begins at 9600
+  lcd.begin(16, 2);   //Setting up the LCD's number of collumns and rows
+   lcd.print("Digital voltmeter");    //Print out a message on the voltmeter
+}
+void loop() {
+int BitValue = analogRead(A0);    //Sets the variable BitValue as the pin A0
+float Voltage = BitValue * (5.0 / 1023.0);    //Configures a float variable called Voltage as BitValue * 5 / 1023
+Serial.print("V=");   //Prints out V= on the serial monitor
+Serial.println(Voltage);    //Prints out the Voltage on the serial monitor
+lcd.setCursor(0,1);   //Sets the cursor to column 0, line 1
+lcd.print("V=");    //Prints out V= on the LCD
+lcd.print(Voltage);   //Prints out the Voltage on the LCD 
+} 
