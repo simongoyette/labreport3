@@ -1,0 +1,30 @@
+/*
+The goal of the program is for the DHT 11 to measure the temperature and to print it out on the LCD
+The main theme of the program is the DHT 11
+*/
+
+#include <LiquidCrystal.h>    //Includes the LCD library
+#include <DHT.h>    //Includes the DHT 11 library
+
+#define DHTPIN 8    //Defines the DHT pin as pin 8
+#define DHTTYPE DHT11   //Defines the type of sensor as a DHT 11
+
+DHT dht(DHTPIN,DHTTYPE);    //Initializes the DHT 11
+
+const int rs = 12, en = 13, d4 = 5, d5 = 4, d6 = 3, d7 = 2;   //Setting up each variable for each pin
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
+void setup() {
+lcd.begin(16,2);    //Setting up he LCD's number of collumns and rows
+dht.begin();    //Initializes communication with the DHT 11
+}
+
+void loop() {
+float temperature = dht.readTemperature();    //Reads the temperature data from the sensor
+
+lcd.clear();    //Clears the LCD
+lcd.setCursor(0,0);   //Sets the cursor to collumn 0, line 0
+lcd.print("Temperature=");    //Prints out "Temperature=" on the LCD
+lcd.setCursor(0,1);   //Sets the cursor to collumn 0, line 1
+lcd.print(temperature, 1);    //Prints out the temperature data from the DHT 11 with 1 decimal number
+delay(2000);  }  //Delay for stability
